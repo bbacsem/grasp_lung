@@ -94,7 +94,7 @@ lambda = 10*max(nufft_recon(:));
 g = gradient(nufft_recon,w, lambda, kdatau,coilsen, nsamps, nsampviews, kerneldistance, x_index, y_index, z_index, index_smth2, win_3d);
 iter=0; m=nufft_recon; delta_m=-g;
 %% Iterations
-while(sqrt(g(:)'*g(:)) >TolGrad && iter<3)
+while(sqrt(g(:)'*g(:)) >TolGrad && iter<4)
     gamma_denom = g(:)'*g(:);
     
     t=t0;
@@ -122,7 +122,9 @@ while(sqrt(g(:)'*g(:)) >TolGrad && iter<3)
     
     delta_m = -g +gamma*delta_m;
     fprintf('number of iterations: %d \n',iter+1);
+    file_name = sprintf('iter%d.nii',iter+1);
+    nii = make_nii(abs(m(221:660,221:660,221:660,:)));
+    save_nii(nii,file_name);
+
     iter = iter+1;
 end
-nii = make_nii(abs(m(221:660,221:660,221:660,:)));
-save_nii(nii,'iter3.nii')
